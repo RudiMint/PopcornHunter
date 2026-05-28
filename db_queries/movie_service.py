@@ -1,4 +1,4 @@
-def build_query(*args):
+def movie_query(args):
     query = """
         SELECT f.*
         FROM film f
@@ -15,11 +15,9 @@ def build_query(*args):
         params.append(f"%{args.tag}%")
 
     if args.genre:
-        genre_list = []
-        for g in args.genre:
-            genre_list.append("c.name = %s")
-            params.append(g)
-        conditions.append("(" + " OR ".join(genre_list) + ")")
+        placeholders = ", ".join(["%s"] * len(args.genre))
+        conditions.append(f"c.name IN ({placeholders})")
+        params.extend(args.genre)
 
     if args.year_range:
 
@@ -28,9 +26,9 @@ def build_query(*args):
             params.append(args.year_range[0])
 
         elif len(args.year_range) >= 2:
+            start, end = args.year_range[:2]
             conditions.append("f.release_year BETWEEN %s AND %s")
-            params.append(args.year_range[0])
-            params.append(args.year_range[1])
+            params.extend([start, end])
 
     if conditions:
         query += " WHERE " + " AND ".join(conditions)

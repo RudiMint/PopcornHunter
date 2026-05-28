@@ -6,4 +6,4 @@ client = MongoClient(MONGO_URL)
 
 client.admin.command("ping")
 db = client[MONGO_CLIENT]
-users = db["popcorn_hunter_stats"]
+users = db["user_stats"]

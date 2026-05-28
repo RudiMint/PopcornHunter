@@ -23,5 +23,13 @@ parser.add_argument(
     "--top",
     default=5,
     type=int,
-    help="top requests, default 5"
+    help="top requests, default limit: 5"
 )
+parser.add_argument(
+    "--unique",
+    default=3,
+    type=int,
+    help="get last unique requests, default limit: 3"
+)
+
+# parser.add_argument("--mode", choices=["tag", "genre", "year"], required=True)

@@ -10,9 +10,12 @@ def movie_query(args):
     params = []
 
     if args.tag:
-        conditions.append("(f.title LIKE %s OR f.description LIKE %s)")
-        params.append(f"%{args.tag}%")
-        params.append(f"%{args.tag}%")
+        tag_group = []
+        for t in args.tag:
+            tag_group.append("(f.title LIKE %s OR f.description LIKE %s)")
+            params.extend([f"%{t}%", f"%{t}%"])
+
+        conditions.append("(" + " OR ".join(tag_group) + ")")
 
     if args.genre:
         placeholders = ", ".join(["%s"] * len(args.genre))
@@ -33,10 +36,25 @@ def movie_query(args):
     if conditions:
         query += " WHERE " + " AND ".join(conditions)
 
-    limit = 10
-    query += " ORDER BY f.rental_rate DESC LIMIT %s"
-    params.append(limit)
-
     return query, params
 
+def get_genres(conn):
+    query = "SELECT name FROM category"
 
+    with conn.cursor() as cursor:
+        cursor.execute(query)
+        return [row[0] for row in cursor.fetchall()]
+
+
+def get_year_range(conn):
+    query = """
+        SELECT
+            MIN(release_year),
+            MAX(release_year)
+        FROM film
+        WHERE release_year IS NOT NULL
+    """
+
+    with conn.cursor() as cursor:
+        cursor.execute(query)
+        return cursor.fetchone()

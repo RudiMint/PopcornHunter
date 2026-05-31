@@ -1,28 +1,32 @@
-from db_queries.movie_service import movie_query
-from utils.mysql_connection import connection
-from services.mongo_history_logs import log_search
-from utils.arguments import parser
-
-args = parser.parse_args()
+from ui.cli import show_filters, search_movies, show_history_stats
+from utils.arguments import parse_command
+from utils.paginator import Paginator
 
 
-@log_search(search_type=args.mode)
-def search_movies(**kwargs):
-    query, params = movie_query(args)
-    connection.cursor.execute(query, params)
-    return connection.cursor.fetchall()
+def main():
+    print("Wellcome to Popcorn Hunter\n")
+    show_filters()
+    while True:
+        command = input("> ")
+        try:
+            args = parse_command(command)
+            print(args)
+
+            if args.quit:
+                break
+
+            if args.top or args.unique:
+                show_history_stats(args, limit=5)
+
+            elif args.tag or args.genre or args.year_range:
+                films = search_movies(args)
+                paginator = Paginator(films, page_size=5)
+                paginator.run()
+
+        except SystemExit:
+            print("Invalid command")
 
 
 if __name__ == "__main__":
+    main()
 
-    try:
-        results = search_movies(**vars(args))
-
-        print(f"Found: {len(results)}")
-        for r in results[:10]:
-            print(r)
-        if not results:
-            print("Not found")
-
-    except Exception as e:
-        print("Error:", e)

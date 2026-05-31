@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from configuration import MONGO_URL, MONGO_CLIENT
+from utils.configuration import MONGO_URL, MONGO_CLIENT
 
 
 client = MongoClient(MONGO_URL)

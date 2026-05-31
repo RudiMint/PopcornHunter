@@ -1,6 +1,6 @@
 import pymysql
 
-from configuration import config
+from utils.configuration import config
 
 
 connection = pymysql.connect(**config)

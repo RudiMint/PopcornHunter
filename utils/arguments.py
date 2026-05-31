@@ -1,5 +1,5 @@
 import argparse
-import shlex
+from utils.command_splitter import input_split
 
 
 parser = argparse.ArgumentParser()
@@ -19,22 +19,22 @@ parser.add_argument(
 parser.add_argument(
     "--year_range",
     nargs="+",
-    type=int,
+    type=str,
     help="year or year range"
 )
 parser.add_argument(
     "--top",
-    type=int,
+    type=str,
     nargs="?",
     const=5,
     help="top requests, default 5"
 )
 parser.add_argument(
     "--unique",
-    type=int,
+    type=str,
     nargs="?",
     const=3,
-    help="get last unique requests, default limit: 3"
+    help="get last unique requests, default limit: 5"
 )
 parser.add_argument(
     "--quit",
@@ -44,4 +44,4 @@ parser.add_argument(
 
 
 def parse_command(command: str):
-    return parser.parse_args(shlex.split(command))
+    return parser.parse_args(input_split(command))

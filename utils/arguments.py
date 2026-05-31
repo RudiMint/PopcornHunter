@@ -1,4 +1,5 @@
 import argparse
+import shlex
 
 
 parser = argparse.ArgumentParser()
@@ -7,10 +8,12 @@ parser = argparse.ArgumentParser()
 parser.add_argument(
     "--tag",
     type=str,
-    help="name of the film or keyword/s in quotation marks"
+    nargs="+",
+    help="one or more keywords (space separated)"
 )
 parser.add_argument(
     "--genre",
+    type=str,
     nargs="+",
     help="one or more genres")
 parser.add_argument(
@@ -21,15 +24,24 @@ parser.add_argument(
 )
 parser.add_argument(
     "--top",
-    default=5,
     type=int,
-    help="top requests, default limit: 5"
+    nargs="?",
+    const=5,
+    help="top requests, default 5"
 )
 parser.add_argument(
     "--unique",
-    default=3,
     type=int,
+    nargs="?",
+    const=3,
     help="get last unique requests, default limit: 3"
 )
+parser.add_argument(
+    "--quit",
+    action="store_true",
+    help="exit program"
+)
 
-# parser.add_argument("--mode", choices=["tag", "genre", "year"], required=True)
+
+def parse_command(command: str):
+    return parser.parse_args(shlex.split(command))

@@ -1,4 +1,3 @@
-# import argparse
 from datetime import datetime, timezone
 from functools import wraps
 
@@ -24,59 +23,34 @@ class SearchLogger:
 
 logger = SearchLogger(users)
 
-def log_search(search_type):
 
-    def decorator(func):
+def log_search(func):
 
-        @wraps(func)
-        def wrapper(*args, **kwargs):
+    @wraps(func)
+    def wrapper(arguments):
 
-            keyword = kwargs.get("keyword") or args[0]
+        results = func(arguments)
 
-            # execute search
-            results = func(*args, **kwargs)
+        params = vars(arguments)
 
-            # log request
-            logger.log(
-                search_type=search_type,
-                params=kwargs,
-                results_count=len(results)
-            )
+        search_parts = []
 
-            return results
+        if arguments.tag:
+            search_parts.append("tag")
+        if arguments.genre:
+            search_parts.append("genre")
+        if arguments.year_range:
+            search_parts.append("year")
 
-        return wrapper
+        search_type = "+".join(search_parts) if search_parts else "empty"
 
-    return decorator
+        logger.log(
+            search_type=search_type,
+            params=params,
+            results_count=len(results or [])
+        )
 
+        return results
 
+    return wrapper
 
-
-# @log_search("keyword")
-# def search_items(keyword):
-#
-#     items = [
-#         {"title": "python tutorial"},
-#         {"title": "python mongodb"},
-#         {"title": "argparse guide"},
-#         {"title": "fastapi course"}
-#     ]
-#
-#     return [
-#         item
-#         for item in items
-#         if keyword.lower() in item["title"].lower()
-#     ]
-#
-#
-# parser = argparse.ArgumentParser()
-#
-# parser.add_argument("--keyword")
-#
-# args = parser.parse_args()
-#
-#
-# results = search_items(args.keyword)
-#
-# print("\nResults:")
-# print(results)

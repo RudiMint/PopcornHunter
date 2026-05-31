@@ -1,9 +1,8 @@
-# from utils.mongo_connection import users
-def get_top_queries(collection, limit=5):
+def get_top_queries(collection, limit):
     pipeline = [
         {
             "$group": {
-                "_id": "$params",
+                "_id": "$search_type",
                 "count": {"$sum": 1}
             }
         },
@@ -18,14 +17,14 @@ def get_top_queries(collection, limit=5):
     return list(collection.aggregate(pipeline))
 
 
-def get_last_unique_queries(collection, limit=3):
+def get_last_unique_queries(collection, limit):
     pipeline = [
         {
             "$sort": {"timestamp": -1}
         },
         {
             "$group": {
-                "_id": "$params",
+                "_id": "$search_type",
                 "timestamp": {"$first": "$timestamp"}
             }
         },
@@ -38,7 +37,3 @@ def get_last_unique_queries(collection, limit=3):
     ]
     return list(collection.aggregate(pipeline))
 
-# result = get_top_queries(users, limit=3)
-#
-# for item in result:
-#     print(f"{item['_id']} -> {item['count']}")

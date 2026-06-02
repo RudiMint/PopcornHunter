@@ -55,18 +55,28 @@ def loading(text="Processing..."):
         yield
         progress.update(task, completed=100)
 
-
-def show_genres(genres):
+def show_genres_table(genres):
     table = Table(
-        title="🎭 Available Genres",
+        title="🎭 Genres",
         box=box.ROUNDED,
-        header_style="bold cyan"
+        title_style="bold magenta",
+        border_style="blue",
+        show_header=False
     )
 
-    table.add_column("Genres", style="magenta")
+    table.add_column("Genre")
 
-    for g in genres:
-        table.add_row(g)
+    # 4 колонки (grid 4x4 стиль)
+    columns = 4
+
+    rows = [
+        genres[i:i + columns]
+        for i in range(0, len(genres), columns)
+    ]
+
+    for row in rows:
+        row += [""] * (columns - len(row))
+        table.add_row(*row)
 
     console.print(table)
 

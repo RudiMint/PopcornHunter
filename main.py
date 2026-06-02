@@ -29,6 +29,9 @@ def main():
                 print_help()
                 continue
 
+            if args.filters:
+                show_filters()
+
             if args.top or args.unique:
                 show_history_stats(args, limit=5)
 

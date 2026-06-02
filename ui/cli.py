@@ -9,7 +9,8 @@ from ui.rich_views import (
     show_unique_queries,
     show_top_queries,
     show_year_range,
-    show_genres,
+    show_genres_table,
+    # show_genres,
     console,
     loading
 )
@@ -24,8 +25,9 @@ COMMANDS = [
     "--year_range",
     "--top",
     "--unique",
-    "--quit",
-    "--help"
+    "--filter",
+    "--help",
+    "--quit"
 ]
 
 command_completer = WordCompleter(COMMANDS, ignore_case=True)
@@ -33,7 +35,8 @@ command_completer = WordCompleter(COMMANDS, ignore_case=True)
 
 def show_filters():
 
-    show_genres(GENRES)
+    # show_genres(GENRES)
+    show_genres_table(GENRES)
     show_year_range(MIN_YEAR, MAX_YEAR)
 
 @log_search
@@ -62,23 +65,6 @@ def show_history_stats(arguments, limit):
         show_unique_queries(data)
         return data
 
-
-def print_help():
-    console.print("""
-[bold cyan]📌 PopcornHunter CLI[/bold cyan]
-
-[green]Search movies:[/green]
-  --genre Action Comedy
-  --tag space future
-  --year_range 2000 2010
-
-[green]History:[/green]
-  --top
-  --unique
-
-[green]System:[/green]
-  --quit
-""")
 
 
 

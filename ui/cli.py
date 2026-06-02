@@ -1,65 +1,84 @@
+from prompt_toolkit.completion import WordCompleter
+
 from db_queries.history_query import get_top_queries, get_last_unique_queries
 from db_queries.movie_service import movie_query, get_genres, get_year_range
 from services.mongo_history_logs import log_search
 from utils.mysql_connection import connection
 from utils.mongo_connection import users
-# from difflib import get_close_matches
+from ui.rich_views import (
+    show_unique_queries,
+    show_top_queries,
+    show_year_range,
+    show_genres,
+    console,
+    loading
+)
 
 GENRES = get_genres(connection)
 MIN_YEAR, MAX_YEAR = get_year_range(connection)
 
 
+COMMANDS = [
+    "--tag",
+    "--genre",
+    "--year_range",
+    "--top",
+    "--unique",
+    "--quit",
+    "--help"
+]
+
+command_completer = WordCompleter(COMMANDS, ignore_case=True)
+
+
 def show_filters():
-    print("\npossible genre options:\n")
 
-    for genre in GENRES:
-        print("-", genre)
-
-    print(
-        f"\npossible year range:\n"
-        f"{MIN_YEAR} - {MAX_YEAR}"
-    )
-
+    show_genres(GENRES)
+    show_year_range(MIN_YEAR, MAX_YEAR)
 
 @log_search
 def search_movies(arguments):
     query, params = movie_query(arguments)
 
-    with connection.cursor() as cursor:
-        cursor.execute(query, params)
-        result = cursor.fetchall()
+    with loading("Searching movies..."):
+        with connection.cursor() as cursor:
+            cursor.execute(query, params)
+            result = cursor.fetchall()
 
-        return result
+    return result
 
 
 def show_history_stats(arguments, limit):
 
     if arguments.top:
-        top_queries = get_top_queries(users, limit)
-        print("\ntop queries:")
 
-        for item in top_queries:
-            print(
-                f"{item['_id']} "
-                f"({item['count']} раз)"
-            )
-        return top_queries
+        data = get_top_queries(users, limit)
+        show_top_queries(data)
+        return data
 
     elif arguments.unique:
-        unique_queries = get_last_unique_queries(users, limit)
-        print("\nlast unique queries:")
 
-        for item in unique_queries:
-            print(item["_id"])
-
-        return unique_queries
+        data = get_last_unique_queries(users, limit)
+        show_unique_queries(data)
+        return data
 
 
+def print_help():
+    console.print("""
+[bold cyan]📌 PopcornHunter CLI[/bold cyan]
 
-# suggestions = get_close_matches(args.genre, GENRES, n=3)
-# print(suggestions)
-#
-# def user_communication(args):
-#     print("all genres to pick: ")
+[green]Search movies:[/green]
+  --genre Action Comedy
+  --tag space future
+  --year_range 2000 2010
+
+[green]History:[/green]
+  --top
+  --unique
+
+[green]System:[/green]
+  --quit
+""")
+
 
 

@@ -1,6 +1,10 @@
 def movie_query(args):
     query = """
-        SELECT f.*
+        SELECT
+        f.film_id,
+        f.title,
+        f.release_year,
+        f.description
         FROM film f
         LEFT JOIN film_category fc on f.film_id = fc.film_id
         LEFT JOIN category c on fc.category_id = c.category_id

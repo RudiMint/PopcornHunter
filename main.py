@@ -1,15 +1,23 @@
-from ui.cli import show_filters, search_movies, show_history_stats
+from prompt_toolkit import prompt
+from rich.panel import Panel
+
+from ui.cli import show_filters, search_movies, show_history_stats, command_completer
+from ui.rich_views import console
+from utils.arguments import parse_command, print_help
 from utils.mysql_connection import connection
 from utils.mongo_connection import client
-from utils.arguments import parse_command
 from utils.paginator import Paginator
 
 
 def main():
-    print("Wellcome to Popcorn Hunter\n")
+    console.print(Panel.fit(
+        "[bold cyan]🎬 Popcorn Hunter[/bold cyan]\n"
+        "[white]Movie search CLI with Mongo logging[/white]",
+        border_style="magenta"
+    ))
     show_filters()
     while True:
-        command = input("> ")
+        command = prompt("> ", completer=command_completer)
         try:
             args = parse_command(command)
             print(args)
@@ -17,16 +25,23 @@ def main():
             if args.quit:
                 break
 
+            if args.help:
+                print_help()
+                continue
+
             if args.top or args.unique:
                 show_history_stats(args, limit=5)
 
             elif args.tag or args.genre or args.year_range:
                 films = search_movies(args)
-                paginator = Paginator(films, page_size=5)
-                paginator.run()
+                if not films:
+                    print("❌ No results found")
+                else:
+                    paginator = Paginator(films, page_size=5)
+                    paginator.run()
 
         except SystemExit:
-            print("Invalid command")
+            pass
 
 
 if __name__ == "__main__":

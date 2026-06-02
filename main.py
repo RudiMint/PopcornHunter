@@ -1,4 +1,6 @@
 from ui.cli import show_filters, search_movies, show_history_stats
+from utils.mysql_connection import connection
+from utils.mongo_connection import client
 from utils.arguments import parse_command
 from utils.paginator import Paginator
 
@@ -28,5 +30,9 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    finally:
+        client.close()
+        connection.close()
 

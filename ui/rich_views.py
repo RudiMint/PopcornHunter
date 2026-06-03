@@ -12,7 +12,7 @@ console = Console()
 
 def show_top_queries(data):
     table = Table(
-        title="🔥 Top Queries",
+        title="Top Queries",
         box=box.SIMPLE_HEAVY,
         header_style="bold yellow"
     )
@@ -28,7 +28,7 @@ def show_top_queries(data):
 
 def show_unique_queries(data):
     table = Table(
-        title="🕓 Unique Searches",
+        title="Unique Searches",
         box=box.MINIMAL_DOUBLE_HEAD,
         header_style="bold blue"
     )
@@ -57,7 +57,7 @@ def loading(text="Processing..."):
 
 def show_genres_table(genres):
     table = Table(
-        title="🎭 Genres",
+        title="Genres",
         box=box.ROUNDED,
         title_style="bold magenta",
         border_style="blue",
@@ -66,7 +66,6 @@ def show_genres_table(genres):
 
     table.add_column("Genre")
 
-    # 4 колонки (grid 4x4 стиль)
     columns = 4
 
     rows = [

@@ -11,11 +11,13 @@ from utils.paginator import Paginator
 
 def main():
     console.print(Panel.fit(
-        "[bold cyan]🎬 Popcorn Hunter[/bold cyan]\n"
-        "[white]Movie search CLI with Mongo logging[/white]",
+        "[bold cyan] Popcorn Hunter[/bold cyan]\n"
+        "[white]Movie search CLI[/white]",
         border_style="magenta"
     ))
     show_filters()
+    print_help()
+
     while True:
         command = prompt("> ", completer=command_completer)
         try:
@@ -38,7 +40,7 @@ def main():
             elif args.tag or args.genre or args.year_range:
                 films = search_movies(args)
                 if not films:
-                    print("❌ No results found")
+                    print("No results found")
                 else:
                     paginator = Paginator(films, page_size=5)
                     paginator.run()

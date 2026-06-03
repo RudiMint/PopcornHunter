@@ -35,7 +35,6 @@ command_completer = WordCompleter(COMMANDS, ignore_case=True)
 
 def show_filters():
 
-    # show_genres(GENRES)
     show_genres_table(GENRES)
     show_year_range(MIN_YEAR, MAX_YEAR)
 

@@ -22,7 +22,6 @@ def main():
         command = prompt("> ", completer=command_completer)
         try:
             args = parse_command(command)
-            print(args)
 
             if args.quit:
                 break
@@ -34,7 +33,7 @@ def main():
             if args.filters:
                 show_filters()
 
-            if args.top or args.unique:
+            if args.top_queries or args.unique:
                 show_history_stats(args, limit=5)
 
             elif args.tag or args.genre or args.year_range:

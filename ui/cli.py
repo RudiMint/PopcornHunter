@@ -10,8 +10,6 @@ from ui.rich_views import (
     show_top_queries,
     show_year_range,
     show_genres_table,
-    # show_genres,
-    console,
     loading
 )
 
@@ -23,7 +21,7 @@ COMMANDS = [
     "--tag",
     "--genre",
     "--year_range",
-    "--top",
+    "--top_queries",
     "--unique",
     "--filter",
     "--help",
@@ -52,7 +50,7 @@ def search_movies(arguments):
 
 def show_history_stats(arguments, limit):
 
-    if arguments.top:
+    if arguments.top_queries:
 
         data = get_top_queries(users, limit)
         show_top_queries(data)

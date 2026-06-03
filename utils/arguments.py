@@ -40,7 +40,7 @@ def print_help():
       Filter movies by year or year range
 
 [bold yellow]📊 History[/bold yellow]
-  --top
+  --top_queries
       Show most frequent search queries
 
   --unique
@@ -76,7 +76,7 @@ parser.add_argument(
     help="year or year range"
 )
 parser.add_argument(
-    "--top",
+    "--top_queries",
     type=str,
     nargs="?",
     const=5,

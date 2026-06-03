@@ -15,9 +15,6 @@ class SearchLogger:
             "results_count": results_count
         })
 
-        print("Log saved!")
-        print("Inserted ID:", result.inserted_id)
-
         return result.inserted_id
 
 

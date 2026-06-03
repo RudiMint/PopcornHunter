@@ -22,14 +22,14 @@ class Paginator:
         table.add_column("ID", style="dim", width=6)
         table.add_column("Title", style="magenta")
         table.add_column("Year", style="green")
-        table.add_column("Description", style="white")
+        table.add_column("Description", style="white", width=65, overflow="fold")
 
         for film in page_items:
             table.add_row(
                 str(film[0]),
                 str(film[1]),
                 str(film[2]),
-                (film[3][:60] + "...") if film[3] else ""
+                film[3] or ""
             )
 
         console.clear()
@@ -48,7 +48,16 @@ class Paginator:
 
             self.render_page(page_items, page + 1, total_pages)
 
-            print("\n[n] next | [p] prev | [q] quit")
+
+            if page == 0:
+                print("\n[n] next | [q] quit")
+
+            elif page == total_pages - 1:
+                print("no more found movies ")
+                print("\n[p] prev | [q] quit")
+
+            else:
+                print("\n[n] next | [p] prev | [q] quit")
 
             cmd = input("> ").strip().lower()
 

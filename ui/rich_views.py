@@ -1,4 +1,3 @@
-import time
 from contextlib import contextmanager
 from rich.console import Console
 from rich.panel import Panel
@@ -22,7 +21,6 @@ def show_top_queries(data):
 
     for item in data:
         table.add_row(item["_id"], str(item["count"]))
-
     console.print(table)
 
 
@@ -36,7 +34,12 @@ def show_unique_queries(data):
     table.add_column("Type", style="magenta")
 
     for item in data:
-        table.add_row(item["_id"])
+        table.add_row(
+            item["search_type"],
+            str(item["timestamp"]),
+            str(item["params"]),
+            str(item["results_count"])
+        )
 
     console.print(table)
 

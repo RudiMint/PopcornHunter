@@ -48,12 +48,15 @@ class Paginator:
 
             self.render_page(page_items, page + 1, total_pages)
 
+            if total_pages == 1:
+                print("these are all the films found")
+                break
 
-            if page == 0:
+            elif page == 0:
                 print("\n[n] next | [q] quit")
 
             elif page == total_pages - 1:
-                print("no more found movies ")
+                print("these are all the films found")
                 print("\n[p] prev | [q] quit")
 
             else:

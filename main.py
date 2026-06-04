@@ -2,13 +2,22 @@ from prompt_toolkit import prompt
 from rich.panel import Panel
 
 from ui.cli import show_filters, search_movies, show_history_stats, command_completer
-from ui.rich_views import console
 from utils.arguments import parse_command, print_help
 from utils.mongo_connection import client
 from utils.paginator import Paginator
+from ui.rich_views import console
 
 
 def main():
+    """
+    Entry point for the PopcornHunter CLI application.
+
+    This function initializes the CLI interface, displays the welcome screen,
+    and runs the main interactive command loop.
+
+    The loop continues until the user explicitly exits via the `--quit`
+    command or equivalent argument.
+    """
     console.print(Panel.fit(
         "[bold cyan] Popcorn Hunter[/bold cyan]\n"
         "[white]Movie search CLI[/white]",

@@ -1,4 +1,14 @@
 def get_top_queries(collection, limit):
+    """
+    Return the most frequently used search types from a MongoDB collection.
+
+    :param MongoDB collection:
+    :param limit:
+    :return: List of aggregated results. Each item contains:
+             - ``_id``: search type
+             - ``count``: number of occurrences
+             - ``doc``: most recent document for that search type
+    """
     pipeline = [
         {
             "$sort": {"timestamp": -1}
@@ -21,6 +31,13 @@ def get_top_queries(collection, limit):
     return list(collection.aggregate(pipeline))
 
 def get_last_unique_queries(collection, limit):
+    """
+    Return the last unique requests from a MongoDB collection.
+    :param MongoDB collection:
+    :param limit:
+    :return: A list of dictionaries representing the most recent query for
+             each unique search type.
+    """
     pipeline = [
         {
             "$sort": {"timestamp": -1}

@@ -1,6 +1,14 @@
 from utils.mysql_connection import get_connection
 
 def movie_query(args):
+    """
+    Build a parameterized SQL query for searching movies.
+    :param args: Search arguments object containing optional attributes:
+                 ``tag``, ``genre``, and ``year_range``.
+    :return: A tuple containing:
+             - SQL query string with parameter placeholders.
+             - List of parameters corresponding to the placeholders.
+    """
     query = """
         SELECT
         f.film_id,
@@ -45,6 +53,11 @@ def movie_query(args):
     return query, params
 
 def get_genres(conn):
+    """
+    Retrieve all movie genres from the database.
+    :type conn: object
+    :return: A list of genre names.
+    """
     query = "SELECT name FROM category"
 
     with conn.cursor() as cursor:
@@ -53,6 +66,11 @@ def get_genres(conn):
 
 
 def get_year_range(conn):
+    """
+    Retrieve the minimum and maximum release years available in the film catalog.
+    :param conn:
+    :return: A tuple containing the minimum and maximum release years
+    """
     query = """
         SELECT
             MIN(release_year),
@@ -66,7 +84,16 @@ def get_year_range(conn):
         return cursor.fetchone()
 
 
-def execute_query(query, params=None):
+def execute_query(query, params):
+    """
+    Execute a parameterized SQL query and return all resulting rows.
+    :param query: SQL query string to execute. The query may contain
+                  parameter placeholders supported by the database driver.
+    :param params: Parameters to bind to the query placeholders. If
+                   ``None`` or empty, the query is executed without
+                   additional parameters.
+    :return: All rows returned by the query.
+    """
     with get_connection() as conn:
         with conn.cursor() as cursor:
             cursor.execute(query, params or [])

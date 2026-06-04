@@ -23,6 +23,11 @@ class RichArgumentParser(argparse.ArgumentParser):
 parser = RichArgumentParser(add_help=False)
 
 def parse_command(command: str):
+    """
+
+    :param command:
+    :return:
+    """
     return parser.parse_args(input_split(command))
 
 def print_help():

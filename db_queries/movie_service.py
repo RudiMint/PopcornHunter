@@ -1,3 +1,5 @@
+from utils.mysql_connection import get_connection
+
 def movie_query(args):
     query = """
         SELECT
@@ -62,3 +64,11 @@ def get_year_range(conn):
     with conn.cursor() as cursor:
         cursor.execute(query)
         return cursor.fetchone()
+
+
+def execute_query(query, params=None):
+    with get_connection() as conn:
+        with conn.cursor() as cursor:
+            cursor.execute(query, params or [])
+            return cursor.fetchall()
+

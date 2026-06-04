@@ -1,9 +1,9 @@
 from prompt_toolkit.completion import WordCompleter
 
+from db_queries.movie_service import movie_query, get_genres, get_year_range, execute_query
 from db_queries.history_query import get_top_queries, get_last_unique_queries
-from db_queries.movie_service import movie_query, get_genres, get_year_range
 from services.mongo_history_logs import log_search
-from utils.mysql_connection import connection
+from utils.mysql_connection import get_connection
 from utils.mongo_connection import users
 from ui.rich_views import (
     show_unique_queries,
@@ -13,8 +13,9 @@ from ui.rich_views import (
     loading
 )
 
-GENRES = get_genres(connection)
-MIN_YEAR, MAX_YEAR = get_year_range(connection)
+with get_connection() as connection:
+    GENRES = get_genres(connection)
+    MIN_YEAR, MAX_YEAR = get_year_range(connection)
 
 
 COMMANDS = [
@@ -36,16 +37,13 @@ def show_filters():
     show_genres_table(GENRES)
     show_year_range(MIN_YEAR, MAX_YEAR)
 
+
 @log_search
 def search_movies(arguments):
     query, params = movie_query(arguments)
 
     with loading("Searching movies..."):
-        with connection.cursor() as cursor:
-            cursor.execute(query, params)
-            result = cursor.fetchall()
-
-    return result
+        return execute_query(query, params)
 
 
 def show_history_stats(arguments, limit):

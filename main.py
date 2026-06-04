@@ -4,7 +4,6 @@ from rich.panel import Panel
 from ui.cli import show_filters, search_movies, show_history_stats, command_completer
 from ui.rich_views import console
 from utils.arguments import parse_command, print_help
-from utils.mysql_connection import connection
 from utils.mongo_connection import client
 from utils.paginator import Paginator
 
@@ -41,7 +40,7 @@ def main():
                 if not films:
                     print("No results found")
                 else:
-                    paginator = Paginator(films, page_size=5)
+                    paginator = Paginator(films, page_size=10)
                     paginator.run()
 
         except SystemExit:
@@ -53,5 +52,4 @@ if __name__ == "__main__":
         main()
     finally:
         client.close()
-        connection.close()
 
